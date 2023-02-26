@@ -1,12 +1,12 @@
 package com.nab.toyrobot.factory;
 
-import com.nab.toyrobot.model.Table;
+import com.nab.toyrobot.model.RobotTable;
 
 public final class TableFactory {
 
-    private static final Table INSTANCE = Table.builder().build();
+    private static final RobotTable INSTANCE = RobotTable.builder().build();
 
-    public static Table getInstance() {
+    public static RobotTable getInstance() {
         return INSTANCE;
     }
 

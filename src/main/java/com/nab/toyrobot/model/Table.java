@@ -1,24 +1,11 @@
 package com.nab.toyrobot.model;
 
+import java.util.Set;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+public interface Table {
+    public boolean isOnTable(int x, int y);
 
-import java.util.*;
+    public boolean isCollision(int x, int y);
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-@Component
-public class Table {
-    private int length = 5;
-    private int breadth = 5;
-    private Set<Robot> robots = new HashSet<>();
-    private Long activeRobotId;
-
-
+    public Set<ToyRobot> report();
 }

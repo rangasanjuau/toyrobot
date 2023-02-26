@@ -1,18 +1,10 @@
 package com.nab.toyrobot.model;
 
+public interface Robot {
+    public Robot move(RobotTable table);
 
-import lombok.Builder;
-import lombok.Data;
-import org.hibernate.validator.constraints.UUID;
+    public Robot left();
 
-@Data
-@Builder
-public class Robot {
-
-    private Long id;
-    private Position position;
-    private Direction currentDirection;
-    private boolean isActive;
-
+    public Robot right();
 
 }

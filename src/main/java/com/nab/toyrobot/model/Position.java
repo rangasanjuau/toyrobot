@@ -1,11 +1,9 @@
 package com.nab.toyrobot.model;
 
-import lombok.Builder;
-import lombok.Data;
+public interface Position {
+    public RobotPosition getNextPosition();
 
-@Data
-@Builder
-public class Position {
-    private Long x;
-    private Long y;
+    public RobotPosition turnLeft();
+
+    public RobotPosition turnRight();
 }

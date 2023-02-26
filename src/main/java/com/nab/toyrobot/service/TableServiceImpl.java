@@ -2,8 +2,13 @@ package com.nab.toyrobot.service;
 
 import com.nab.toyrobot.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class TableServiceImpl {
+import java.util.Set;
+
+
+@Service
+public class TableServiceImpl implements  TableService{
 
     @Autowired
     Table table;
@@ -11,6 +16,7 @@ public class TableServiceImpl {
     @Autowired
     DirectionService directionService;
 
+    @Override
     public Robot placeRobot(Position position) throws Exception {
 
         // Create a new robot
@@ -35,8 +41,8 @@ public class TableServiceImpl {
 
         return robot;
     }
-
-    public void moveRobot()
+    @Override
+    public Robot moveRobot()
     {
         Robot robot = getRobotById(table.getActiveRobotId());
         Position position = robot.getPosition();
@@ -61,15 +67,17 @@ public class TableServiceImpl {
             default:
                 throw new IllegalArgumentException("Invalid Move: ");
         }
+        return robot;
     }
-
-    public void rotateRobot(RotationDirection rotationDirection)
+    @Override
+    public Robot rotateRobot(RotationDirection rotationDirection)
     {
         Robot robot = getRobotById(table.getActiveRobotId());
         robot.setCurrentDirection(directionService.getNextDirection(robot.getCurrentDirection(), rotationDirection));
+        return robot;
     }
 
-
+    @Override
     public Robot getRobotById(Long id) {
         return table.getRobots()
                 .stream()
@@ -77,17 +85,25 @@ public class TableServiceImpl {
                 .findAny()
                 .orElse(null);
     }
-
+    @Override
     public Long getNextAvailableId()
     {
         Long maxId =  table.getRobots()
                 .stream().mapToLong(Robot::getId).max().orElse(0);
         return maxId + 1;
     }
-
+    @Override
     public Boolean isPositionEmpty(Position position)
     {
-        return table.getRobots().stream().anyMatch( r -> r.getPosition().equals(position));
+        return !table.getRobots().stream().anyMatch( r -> r.getPosition().equals(position));
     }
+
+    @Override
+    public Set<Robot> report()
+    {
+        return table.getRobots();
+    }
+
+
 
 }

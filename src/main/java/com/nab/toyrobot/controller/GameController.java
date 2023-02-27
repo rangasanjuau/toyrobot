@@ -3,15 +3,17 @@ package com.nab.toyrobot.controller;
 
 import com.nab.toyrobot.exception.CollisionException;
 import com.nab.toyrobot.exception.EdgeDetectedException;
+import com.nab.toyrobot.exception.ResourceNotFoundException;
 import com.nab.toyrobot.exception.TableInitializationException;
-import com.nab.toyrobot.model.*;
+import com.nab.toyrobot.model.RobotPosition;
+import com.nab.toyrobot.model.Rotation;
+import com.nab.toyrobot.model.Table;
+import com.nab.toyrobot.model.ToyRobot;
 import com.nab.toyrobot.request.RequestDto;
 import com.nab.toyrobot.service.TableService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Set;
 
 @RestController
 @RequestMapping("/game")
@@ -30,12 +32,11 @@ public class GameController {
      */
     @PostMapping("/place")
     public ToyRobot placeRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException, EdgeDetectedException {
-        ToyRobot toyRobot = (ToyRobot) tableService.placeRobot(RobotPosition.builder()
-                                                                .x(requestDto.getX())
-                                                                .y(requestDto.getY())
-                                                                .direction(requestDto.getDirection())
-                                                                .build());
-        return toyRobot;
+        return (ToyRobot) tableService.placeRobot(RobotPosition.builder()
+                .x(requestDto.getX())
+                .y(requestDto.getY())
+                .direction(requestDto.getDirection())
+                .build());
 
     }
 
@@ -48,7 +49,7 @@ public class GameController {
      * @throws
      */
     @PutMapping("/rotate/{direction}")
-    public ToyRobot rotateRobot(@Valid @RequestBody RequestDto requestDto) throws TableInitializationException {
+    public ToyRobot rotateRobot(@Valid @RequestBody RequestDto requestDto) throws TableInitializationException, ResourceNotFoundException {
         return tableService.rotateRobot(Rotation.valueOf(requestDto.getCommand()));
     }
 
@@ -60,7 +61,7 @@ public class GameController {
      * @throws
      */
     @PutMapping("/move")
-    public ToyRobot moveRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException, EdgeDetectedException, TableInitializationException {
+    public ToyRobot moveRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException, EdgeDetectedException, TableInitializationException, ResourceNotFoundException {
         return tableService.moveRobot();
     }
 

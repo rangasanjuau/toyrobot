@@ -2,6 +2,7 @@ package com.nab.toyrobot.service;
 
 import com.nab.toyrobot.exception.CollisionException;
 import com.nab.toyrobot.exception.EdgeDetectedException;
+import com.nab.toyrobot.exception.ResourceNotFoundException;
 import com.nab.toyrobot.exception.TableInitializationException;
 import com.nab.toyrobot.model.*;
 import org.springframework.stereotype.Service;
@@ -42,7 +43,7 @@ public class TableServiceImpl implements TableService{
     }
 
     @Override
-    public ToyRobot rotateRobot(Rotation rotationDirection) throws TableInitializationException {
+    public ToyRobot rotateRobot(Rotation rotationDirection) throws TableInitializationException, ResourceNotFoundException {
 
         validateTable();
 
@@ -55,27 +56,37 @@ public class TableServiceImpl implements TableService{
                     robot.get().left();
                 else
                     robot.get().right();
+
+                return robot.get();
             }
-            return robot.get();
+            else
+                throw new ResourceNotFoundException("Robot Not Found");
 
     }
 
     @Override
-    public ToyRobot moveRobot() throws CollisionException, EdgeDetectedException, TableInitializationException {
+    public ToyRobot moveRobot() throws CollisionException, EdgeDetectedException, TableInitializationException, ResourceNotFoundException {
 
         validateTable();
 
-        RobotTable robotTable = (RobotTable) table;
+        RobotTable robotTable = table;
         Optional<ToyRobot> robot = getRobotById(robotTable.getActiveRobotId());
-        RobotPosition position =  robot.get().getPosition();
 
-        // Get the new Position
-        RobotPosition newPosition = position.getNextPosition(position.getDirection());
+        if(robot.isPresent())
+        {
+            RobotPosition position =  robot.get().getPosition();
 
-        // Check if there is a collision / edge exception
-        validateMove(newPosition);
+            // Get the new Position
+            RobotPosition newPosition = position.getNextPosition(position.getDirection());
 
-        return (ToyRobot) robot.get().move(robotTable);
+            // Check if there is a collision / edge exception
+            validateMove(newPosition);
+
+            return (ToyRobot) robot.get().move(robotTable);
+        }
+        else
+            throw new ResourceNotFoundException("Robot Not Found");
+
 
     }
 

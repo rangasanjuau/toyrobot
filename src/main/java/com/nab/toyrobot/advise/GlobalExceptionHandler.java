@@ -18,9 +18,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleMethodArgumentTypeMismatchException(MethodArgumentNotValidException ex) {
 
         Map<String, String> errorMap = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach(e -> {
-            errorMap.put(e.getObjectName(), e.getDefaultMessage());
-        });
+        ex.getBindingResult().getAllErrors().forEach(e ->
+            errorMap.put(e.getObjectName(), e.getDefaultMessage())
+        );
 
         return new ResponseEntity<>(errorMap, HttpStatus.BAD_REQUEST);
     }

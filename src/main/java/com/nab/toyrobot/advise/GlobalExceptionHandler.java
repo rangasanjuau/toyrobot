@@ -1,8 +1,7 @@
 package com.nab.toyrobot.advise;
 
 
-import com.nab.toyrobot.exception.CollisionException;
-import com.nab.toyrobot.exception.ErrorResponse;
+import com.nab.toyrobot.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +31,22 @@ public class GlobalExceptionHandler {
         error.setErrorCode(HttpStatus.BAD_REQUEST.value());
         error.setMessage(ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EdgeDetectedException.class)
+    public ResponseEntity<ErrorResponse> handleMEdgeDetectedException(EdgeDetectedException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.BAD_REQUEST.value());
+        error.setMessage(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(TableInitializationException.class)
+    public ResponseEntity<ErrorResponse> handleTableInitializationException(TableInitializationException ex) {
+        ErrorResponse error = new ErrorResponse();
+        error.setErrorCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        error.setMessage(ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

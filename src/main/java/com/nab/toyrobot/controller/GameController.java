@@ -2,6 +2,8 @@ package com.nab.toyrobot.controller;
 
 
 import com.nab.toyrobot.exception.CollisionException;
+import com.nab.toyrobot.exception.EdgeDetectedException;
+import com.nab.toyrobot.exception.TableInitializationException;
 import com.nab.toyrobot.model.*;
 import com.nab.toyrobot.request.RequestDto;
 import com.nab.toyrobot.service.TableService;
@@ -27,13 +29,12 @@ public class GameController {
      * @throws
      */
     @PostMapping("/place")
-    public ToyRobot placeRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException {
+    public ToyRobot placeRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException, EdgeDetectedException {
         ToyRobot toyRobot = (ToyRobot) tableService.placeRobot(RobotPosition.builder()
                                                                 .x(requestDto.getX())
                                                                 .y(requestDto.getY())
                                                                 .direction(requestDto.getDirection())
                                                                 .build());
-
         return toyRobot;
 
     }
@@ -47,7 +48,7 @@ public class GameController {
      * @throws
      */
     @PutMapping("/rotate/{direction}")
-    public ToyRobot rotateRobot(@Valid @RequestBody RequestDto requestDto) {
+    public ToyRobot rotateRobot(@Valid @RequestBody RequestDto requestDto) throws TableInitializationException {
         return tableService.rotateRobot(Rotation.valueOf(requestDto.getCommand()));
     }
 
@@ -59,7 +60,7 @@ public class GameController {
      * @throws
      */
     @PutMapping("/move")
-    public ToyRobot moveRobot(@Valid @RequestBody RequestDto requestDto) {
+    public ToyRobot moveRobot(@Valid @RequestBody RequestDto requestDto) throws CollisionException, EdgeDetectedException, TableInitializationException {
         return tableService.moveRobot();
     }
 
@@ -72,7 +73,7 @@ public class GameController {
      * @throws
      */
     @GetMapping("/report")
-    public Table report() {
+    public Table report() throws TableInitializationException {
         return tableService.report();
     }
 

@@ -3,9 +3,12 @@ package com.nab.toyrobot.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nab.toyrobot.exception.CollisionException;
 import com.nab.toyrobot.serialize.NameSerializer;
 import lombok.Builder;
 import lombok.Data;
+
+import java.util.Objects;
 
 @Data
 @Builder
@@ -21,17 +24,15 @@ public class ToyRobot implements  Robot{
     @Override
     public Robot move(Table table) {
 
-        if (position != null) {
+        if (!Objects.isNull(position)) {
             RobotPosition newPosition = position.getNextPosition(position.getDirection());
-            if (table.isOnTable(newPosition.getX(), newPosition.getY())) {
-                position = newPosition;
-            }
+            position = newPosition;
         }
         return this;
     }
     @Override
     public Robot left() {
-        if (position != null) {
+        if (!Objects.isNull(position)) {
             position = position.turnLeft();
         }
         return this;
@@ -39,10 +40,11 @@ public class ToyRobot implements  Robot{
 
     @Override
     public Robot right() {
-        if (position != null) {
+        if (!Objects.isNull(position)) {
             position = position.turnRight();
         }
         return this;
     }
+
 
 }

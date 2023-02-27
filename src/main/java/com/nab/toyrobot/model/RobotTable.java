@@ -13,14 +13,27 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 @Component
-public class RobotTable implements  Table{
+public final class RobotTable implements  Table{
+
+    // private static variable to hold the singleton instance
+    private static volatile Table instance;
+
+
     private int length = 5;
     private int breadth = 5;
     private Set<ToyRobot> robots = new HashSet<>();
+
+
+    // private constructor to prevent instantiation from outside
+    private RobotTable(int length, int breadth) {
+        this.length = length;
+        this.breadth = breadth;
+    }
+
 
     @JsonProperty("activeRobotId")
     @JsonSerialize(using = NameSerializer.class)
@@ -32,7 +45,7 @@ public class RobotTable implements  Table{
     }
 
     @Override
-    public boolean isCollision(int x, int y) {
+    public boolean detectCollision(int x, int y) {
         return robots.stream().anyMatch(e -> e.getPosition().equals(RobotPosition.builder().x(x).y(y).direction(e.getPosition().getDirection()).build()));
     }
     @Override
@@ -41,6 +54,18 @@ public class RobotTable implements  Table{
         HashSet<Robot> robots = new HashSet<>();
         robots.addAll((Collection<? extends Robot>) getRobots());
         return robots;
+    }
+
+    // public static method to get the singleton instance
+    public static Table getInstance(int length, int breadth) {
+        if (instance == null) { // check if the instance is not already created
+            synchronized (Table.class) { // acquire lock on the class object
+                if (instance == null) { // double check for thread-safety
+                    instance = new RobotTable(length, breadth); // create the singleton instance
+                }
+            }
+        }
+        return instance; // return the singleton instance
     }
 
 

@@ -1,6 +1,6 @@
 package com.nab.toyrobot.request;
 
-import com.nab.toyrobot.model.Direction;
+import com.nab.toyrobot.enums.Direction;
 import com.nab.toyrobot.validator.ValidRequestDto;
 import lombok.Data;
 

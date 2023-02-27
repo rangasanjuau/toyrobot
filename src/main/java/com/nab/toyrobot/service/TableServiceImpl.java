@@ -1,11 +1,12 @@
 package com.nab.toyrobot.service;
 
+import com.nab.toyrobot.enums.Direction;
 import com.nab.toyrobot.exception.CollisionException;
-import com.nab.toyrobot.model.RobotPosition;
-import com.nab.toyrobot.model.RobotTable;
-import com.nab.toyrobot.model.ToyRobot;
+import com.nab.toyrobot.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 
 @Service
@@ -13,25 +14,24 @@ public class TableServiceImpl implements TableService{
 
     @Autowired
     RobotTable table;
-    @Autowired
-    DirectionService directionService;
 
     @Override
-    public ToyRobot placeRobot(RobotPosition position) throws CollisionException {
+    public Robot placeRobot(Position position) throws CollisionException {
 
+        RobotPosition robotPosition = (RobotPosition) position;
         // Create a new robot
         ToyRobot robot = ToyRobot.builder().id(getNextAvailableId()).build();
 
 
         // If first robot then set ACTIVE
-        if (table.getRobots() == null)
+        if (table.getRobots().isEmpty())
             table.setActiveRobotId(robot.getId());
 
 
         // Validate if the position is not a collision
-        if(!table.isCollision(position.getX(), position.getY()))
+        if(!table.isCollision(robotPosition.getX(), robotPosition.getY()))
         {
-            robot.setPosition(position);
+            robot.setPosition(robotPosition);
             table.getRobots().add(robot);
         }
         else
@@ -40,15 +40,36 @@ public class TableServiceImpl implements TableService{
         return robot;
     }
 
+    @Override
+    public ToyRobot rotateRobot(Rotation rotationDirection)  {
+
+
+        Optional<ToyRobot> robot = getRobotById(table.getActiveRobotId());
+
+        if(!robot.isEmpty())
+        {
+            if(rotationDirection.equals(Rotation.LEFT))
+                robot.get().left();
+            else
+                robot.get().right();
+        }
+        return robot.get();
+    }
 
     @Override
-    public ToyRobot getRobotById(int id) {
-        return table.getRobots()
-                .stream()
-                .filter(robot -> robot.getId() == id)
-                .findAny()
-                .orElse(null);
+    public ToyRobot moveRobot()  {
+
+        RobotTable robotTable = (RobotTable) table;
+
+        Optional<ToyRobot> robot = getRobotById(robotTable.getActiveRobotId());
+        return (ToyRobot) robot.get().move(robotTable);
     }
+
+    @Override
+    public Table report()  {
+        return table;
+    }
+
     @Override
     public int getNextAvailableId()
     {
@@ -62,7 +83,14 @@ public class TableServiceImpl implements TableService{
         return x >= 0 && x < table.getBreadth() && y >= 0 && y < table.getLength();
     }
 
-
+    @Override
+    public Optional<ToyRobot> getRobotById(int id)
+    {
+        return table.getRobots()
+                .stream()
+                .filter(r -> r.getId() == table.getActiveRobotId())
+                .findFirst();
+    }
 
 
 

@@ -1,6 +1,9 @@
 package com.nab.toyrobot.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nab.toyrobot.serialize.NameSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +21,9 @@ public class RobotTable implements  Table{
     private int length = 5;
     private int breadth = 5;
     private Set<ToyRobot> robots = new HashSet<>();
+
+    @JsonProperty("activeRobotId")
+    @JsonSerialize(using = NameSerializer.class)
     private int activeRobotId;
 
     @Override
@@ -30,9 +36,11 @@ public class RobotTable implements  Table{
         return robots.stream().anyMatch(e -> e.getPosition().equals(RobotPosition.builder().x(x).y(y).direction(e.getPosition().getDirection()).build()));
     }
     @Override
-    public Set<ToyRobot> report()
+    public Set<Robot> report()
     {
-        return getRobots();
+        HashSet<Robot> robots = new HashSet<>();
+        robots.addAll((Collection<? extends Robot>) getRobots());
+        return robots;
     }
 
 

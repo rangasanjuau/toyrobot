@@ -7,5 +7,5 @@ public interface Table {
 
     public boolean isCollision(int x, int y);
 
-    public Set<ToyRobot> report();
+    public Set<Robot> report();
 }

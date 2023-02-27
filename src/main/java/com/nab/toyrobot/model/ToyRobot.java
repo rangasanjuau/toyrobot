@@ -15,7 +15,7 @@ public class ToyRobot implements Robot {
 
 
     @JsonProperty("id")
-    @JsonSerialize(using = NameSerializer.class)
+    //@JsonSerialize(using = NameSerializer.class)
     private int id;
 
     private RobotPosition position;

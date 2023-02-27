@@ -25,5 +25,6 @@ public interface TableService {
     public void validateTable() throws TableInitializationException;
 
     public void validateMove(RobotPosition newPosition) throws CollisionException, EdgeDetectedException;
+    public ToyRobot activateRobot(int id) throws TableInitializationException, ResourceNotFoundException;
 
 }

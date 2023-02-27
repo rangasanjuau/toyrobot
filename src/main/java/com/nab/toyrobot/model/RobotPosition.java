@@ -18,23 +18,26 @@ public class RobotPosition implements Position{
 
     @Override
     public RobotPosition getNextPosition(Direction direction) {
+        int nx = x;
+        int ny = y;
 
         switch (direction) {
             case NORTH:
-                y += 1;
+                ny += 1;
                 break;
             case SOUTH:
-                y -= 1;
+                ny -= 1;
                 break;
             case WEST:
-                x += 1;
+                nx += 1;
                 break;
             case EAST:
-                x -= 1;
+                nx -= 1;
                 break;
         }
 
-        return RobotPosition.builder().x(x).y(y).direction(direction).build();
+        //return new RobotPosition(nx,ny,direction);
+        return RobotPosition.builder().x(nx).y(ny).direction(direction).build();
     }
 
 

@@ -42,6 +42,26 @@ public class TableServiceImpl implements TableService{
         return robot;
     }
 
+
+    @Override
+    public ToyRobot activateRobot(int id) throws TableInitializationException, ResourceNotFoundException {
+
+        validateTable();
+
+        // Get the robot
+        Optional<ToyRobot> newActiveRobot = getRobotById(id);
+
+        if(newActiveRobot.isPresent())
+        {
+            table.setActiveRobotId(id);
+            return newActiveRobot.get();
+        }
+
+        else
+            throw new ResourceNotFoundException("Robot Not Found");
+    }
+
+
     @Override
     public ToyRobot rotateRobot(Rotation rotationDirection) throws TableInitializationException, ResourceNotFoundException {
 
@@ -75,7 +95,6 @@ public class TableServiceImpl implements TableService{
         if(robot.isPresent())
         {
             RobotPosition position =  robot.get().getPosition();
-
             // Get the new Position
             RobotPosition newPosition = position.getNextPosition(position.getDirection());
 
@@ -126,11 +145,11 @@ public class TableServiceImpl implements TableService{
     @Override
     public void validateMove(RobotPosition newPosition) throws CollisionException, EdgeDetectedException {
 
-        if(table.detectCollision(newPosition.getX(), newPosition.getY()))
-            throw new CollisionException("Collision Detected");
-
         if(!table.isOnTable(newPosition.getX(), newPosition.getY()))
             throw new EdgeDetectedException("Edge Detected - Invalid Move");
+
+        if(table.detectCollision(newPosition.getX(), newPosition.getY()))
+            throw new CollisionException("Collision Detected");
     }
 
 

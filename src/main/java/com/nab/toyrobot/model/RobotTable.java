@@ -19,7 +19,7 @@ import java.util.*;
 @Builder
 @Component
 
-public final class RobotTable implements  Table{
+public class RobotTable implements  Table{
 
     // private static variable to hold the singleton instance
     private static volatile Table instance;

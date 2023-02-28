@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.internal.util.stereotypes.ThreadSafe;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -17,7 +18,8 @@ import java.util.*;
 @NoArgsConstructor
 @Builder
 @Component
-public final class RobotTable implements  Table{
+
+public class RobotTable implements  Table{
 
     // private static variable to hold the singleton instance
     private static volatile Table instance;
@@ -51,12 +53,13 @@ public final class RobotTable implements  Table{
     @Override
     public Set<Robot> report()
     {
-        HashSet<Robot> robots = new HashSet<>();
-        robots.addAll((Collection<? extends Robot>) getRobots());
-        return robots;
+        HashSet<Robot> robotList = new HashSet<>();
+        robotList.addAll((Collection<? extends Robot>) getRobots());
+        return robotList;
     }
 
     // public static method to get the singleton instance
+
     public static Table getInstance(int length, int breadth) {
         if (instance == null) { // check if the instance is not already created
             synchronized (Table.class) { // acquire lock on the class object

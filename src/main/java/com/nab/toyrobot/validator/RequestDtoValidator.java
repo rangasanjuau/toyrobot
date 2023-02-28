@@ -5,14 +5,8 @@ import com.nab.toyrobot.request.RequestDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.Objects;
-
 
 public class RequestDtoValidator implements ConstraintValidator<ValidRequestDto, RequestDto> {
-
-    @Override
-    public void initialize(ValidRequestDto constraintAnnotation) {
-    }
 
     @Override
     public boolean isValid(RequestDto requestDto, ConstraintValidatorContext context) {
